@@ -1,0 +1,29 @@
+  {
+  "compilerOptions": {
+    "outDir": "./dist",
+    // Disabled due to: https://github.com/TypeStrong/ts-node/issues/693
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "target": "ESNext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "sourceMap": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "baseUrl": "packages",
+    "importHelpers": true,
+    "downlevelIteration": true,
+    "preserveSymlinks": true,
+    "typeRoots": ["node_modules/@types", "src/types"],
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "build", ".next"]
+}
