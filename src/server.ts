@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import path from 'path';
+import DomainMonitor from './DomainMonitor';
 import {Domain} from './services/domain';
-import {Whois} from './services/whois';
 import Logger from './singletons/logger';
 const nconf = require('nconf');
 
@@ -25,19 +25,15 @@ nconf.defaults({
 global.nconf = nconf;
 
 class Server {
+	protected monitor: DomainMonitor;
 	protected domains: Domain[] = [];
 	protected emitter: EventEmitter;
 
 	// Can only be initiated asynchronously
 	protected constructor() {
 		this.emitter = new EventEmitter();
-		const whois = new Whois();
-		this.domains = nconf.get('domains').map(async (domainName: string) => {
-			const domain = new Domain(whois, logger);
-			await domain.getDomain(domainName);
-			console.log(domainName, domain.expired);
-			return domain;
-		});
+		this.monitor = new DomainMonitor(this.emitter, logger);
+		this.monitor.start();
 	}
 
 	public static async build(): Promise<Server> {

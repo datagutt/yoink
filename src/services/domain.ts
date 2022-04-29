@@ -24,12 +24,13 @@ const checkIfInvalid = (whoisData: IWhoisData | null) => {
 };
 
 export class Domain {
-	private domainName: string = '';
+	public domainName: string = '';
 	private data: IMappedWhoisData = {};
 	private whois: Whois;
 	private logger: Logger;
 
-	constructor(whois: Whois, logger: Logger) {
+	constructor(domainName: string, whois: Whois, logger: Logger) {
+		this.domainName = domainName;
 		this.whois = whois;
 		this.logger = logger;
 	}
@@ -64,9 +65,8 @@ export class Domain {
 		return this.isExpiringSoon();
 	}
 
-	async getDomain(domain: string): Promise<IMappedWhoisData | null> {
-		const whoisData = await this.whois.whois(domain);
-		this.domainName = domain;
+	async getDomain(): Promise<IMappedWhoisData | null> {
+		const whoisData = await this.whois.whois(this.domainName);
 
 		if (checkIfInvalid(whoisData)) {
 			return null;
