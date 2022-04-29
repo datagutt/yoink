@@ -31,8 +31,8 @@ export default class DomainMonitor {
 		this.domains = nconf.get('domains').map((domainName: string) => new Domain(domainName, this.whois, this.logger));
 		this.timer = setInterval(this.check, CHECK_INTERVAL);
 
-		await this.check();
-
 		this.logger.info('domain monitor started');
+
+		await this.check();
 	}
 }
