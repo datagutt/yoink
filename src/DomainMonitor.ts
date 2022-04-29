@@ -21,10 +21,25 @@ export default class DomainMonitor {
 	protected async check() {
 		this.logger.info('checking domains');
 		for (const domain of this.domains.values()) {
-			await domain.getDomain();
+			if (domain.expiringSoon) {
+				await domain.getDomain();
+			}
 			console.log(`${domain.domainName}: ${domain.expired ? 'expired' : 'not expired'}`);
+			if (domain.expired) {
+				this.emitter.emit('domainExpired', domain);
+			}
 		}
 	}
+
+	protected handleEvents() {
+		this.emitter.on('domainExpired', (domain: Domain) => {
+			this.logger.info(`domain ${domain.domainName} expired`);
+			// We no longer need to monitor this domain
+			this.domains.delete(domain.domainName);
+			this.emitter.emit('buyDomain', domain);
+		});
+	}
+
 	public async start() {
 		this.logger.info('starting domain monitor');
 
@@ -34,5 +49,12 @@ export default class DomainMonitor {
 		this.logger.info('domain monitor started');
 
 		await this.check();
+	}
+
+	public close() {
+		this.logger.info('closing domain monitor');
+		if (this.timer) {
+			clearInterval(this.timer);
+		}
 	}
 }
