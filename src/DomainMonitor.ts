@@ -3,6 +3,7 @@ import {Logger} from 'tslog';
 import {Domain} from './services/domain';
 import {Whois} from './services/whois';
 
+const CHECK_INTERVAL = 1000 * 60 * 1; // 1 minute
 export default class DomainMonitor {
 	private domains = new Map<string, Domain>();
 	private whois = new Whois();
@@ -27,7 +28,7 @@ export default class DomainMonitor {
 		this.logger.info('starting domain monitor');
 
 		this.domains = nconf.get('domains').map((domainName: string) => new Domain(domainName, this.whois, this.logger));
-		this.timer = setInterval(this.check, 1000 * 60 * 60);
+		this.timer = setInterval(this.check, CHECK_INTERVAL);
 
 		await this.check();
 
