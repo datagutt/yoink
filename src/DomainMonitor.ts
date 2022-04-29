@@ -15,6 +15,7 @@ export default class DomainMonitor {
 		this.emitter = emitter;
 		this.logger = logger;
 		this.domains = new Map<string, Domain>();
+		this.check = this.check.bind(this);
 	}
 
 	protected async check() {
