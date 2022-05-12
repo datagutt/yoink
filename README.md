@@ -1,12 +1,12 @@
 # yoink
  Domain yoinker/domain backorder/domain sniper
 
-#### Configuration
+### Configuration
 Make a config/production.json file:
 ```
 {
   "domains": [
-    "domain.tv
+    "domain.tv"
   ],
   "vercel": {
     "teamId": "team_id",
