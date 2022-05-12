@@ -31,11 +31,21 @@ export default class DomainMonitor {
 		}
 	}
 
+	protected save(domain: Domain) {
+		global.nconf.set(
+			'domains',
+			Array.from(this.domains.keys()).filter(domainName => domainName !== domain.domainName)
+		);
+		global.nconf.set('removedDomains', [...global.nconf.get('removedDomains'), domain.domainName]);
+		global.nconf.save();
+	}
+
 	protected handleEvents() {
 		this.emitter.on('domainExpired', (domain: Domain) => {
 			this.logger.info(`domain ${domain.domainName} expired`);
 			// We no longer need to monitor this domain
 			this.domains.delete(domain.domainName);
+			this.save(domain);
 			this.emitter.emit('buyDomain', domain);
 		});
 	}

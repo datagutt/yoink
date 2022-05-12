@@ -15,10 +15,10 @@ const ENV = process.env.NODE_ENV || 'production';
 logger.info('Loading config file...');
 nconf.argv().env();
 nconf.file('default', path.join('config', path.sep, `${ENV}.json`));
-nconf.set('base_dir', __dirname);
 nconf.defaults({
 	port: 3000,
 	domains: [],
+	removedDomains: [],
 });
 //nconf.save();
 
