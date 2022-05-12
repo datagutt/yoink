@@ -3,7 +3,7 @@ import {Logger} from 'tslog';
 import {Domain} from './services/domain';
 import {Whois} from './services/whois';
 
-const CHECK_INTERVAL = 1000 * 60 * 1; // 1 minute
+const CHECK_INTERVAL = 1000 * 60 * 10; // 10 minutes
 export default class DomainMonitor {
 	private domains = new Map<string, Domain>();
 	private whois = new Whois();
