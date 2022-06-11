@@ -2,6 +2,11 @@ import EventEmitter from 'events';
 import fetch from 'node-fetch';
 import {Logger} from 'tslog';
 
+interface DomainBody {
+	name: string;
+	renew: boolean;
+	expectedPrice?: number;
+}
 export class Vercel {
 	private readonly teamId: string;
 	private readonly headers: any;
@@ -20,11 +25,14 @@ export class Vercel {
 
 	async buyDomain(name: string, expectedPrice?: number): Promise<boolean> {
 		const url = `https://api.vercel.com/v4/domains/buy?teamId=${this.teamId}`;
-		const body = {
+		const body: DomainBody = {
 			name,
-			expectedPrice: expectedPrice || 0,
 			renew: true,
 		};
+
+		if (expectedPrice) {
+			body.expectedPrice = expectedPrice ?? 50;
+		}
 
 		try {
 			const res = await fetch(url, {
