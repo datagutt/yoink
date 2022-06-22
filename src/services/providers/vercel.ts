@@ -28,11 +28,8 @@ export class Vercel {
 		const body: DomainBody = {
 			name,
 			renew: true,
+			expectedPrice: expectedPrice ?? 50,
 		};
-
-		if (expectedPrice) {
-			body.expectedPrice = expectedPrice ?? 50;
-		}
 
 		try {
 			const res = await fetch(url, {
