@@ -1,7 +1,7 @@
 import {Logger} from 'tslog';
-import {IMappedWhoisData, IWhoisData, Whois} from './whois';
+import {IMappedWhoisData, Whois} from './whois';
 
-const checkIfInvalid = (whoisData: IWhoisData | null) => {
+const checkIfAvailable = (whoisData: IMappedWhoisData | null) => {
 	if (!whoisData) {
 		return true;
 	}
@@ -10,12 +10,13 @@ const checkIfInvalid = (whoisData: IWhoisData | null) => {
 		return true;
 	}
 
-	const text = whoisData['text'] ?? '';
+	const text = whoisData.text ?? '';
+
 	if (!/\S/.test(text) || /not found|no match/i.test(text)) {
 		return true;
 	}
 
-	const status = whoisData['Domain Status'];
+	const status = whoisData.domainStatus;
 	if (Array.isArray(status) && (status.length === 0 || status.includes('available') || status.includes('free'))) {
 		return true;
 	}
@@ -36,13 +37,7 @@ export class Domain {
 	}
 
 	isExpired(): boolean {
-		const expiryDate = this.data?.expiryDate;
-		if (!expiryDate) {
-			return true;
-		}
-
-		const now = new Date();
-		return now > expiryDate;
+		return this.data && checkIfAvailable(this.data);
 	}
 
 	isExpiringSoon(): boolean {
@@ -68,7 +63,8 @@ export class Domain {
 	async getDomain(): Promise<IMappedWhoisData | null> {
 		const whoisData = await this.whois.whois(this.domainName);
 
-		if (checkIfInvalid(whoisData)) {
+		if (whoisData === null) {
+			this.logger.error(`Could not get whois data for ${this.domainName}`);
 			return null;
 		}
 
