@@ -3,11 +3,11 @@ import {IMappedWhoisData, Whois} from './whois';
 
 const checkIfAvailable = (whoisData: IMappedWhoisData | null) => {
 	if (!whoisData) {
-		return true;
+		return false;
 	}
 
 	if (Object.keys(whoisData).length === 0) {
-		return true;
+		return false;
 	}
 
 	const text = whoisData.text ?? '';
