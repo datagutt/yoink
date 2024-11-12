@@ -69,7 +69,7 @@ export default class DomainMonitor {
 	public close() {
 		this.logger.info('closing domain monitor');
 		if (this.timer) {
-		//	clearInterval(this.timer);
+			clearInterval(this.timer);
 		}
 	}
 }
