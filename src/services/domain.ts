@@ -17,6 +17,7 @@ const checkIfAvailable = (whoisData: IMappedWhoisData | null) => {
 	}
 
 	const status = whoisData.domainStatus;
+
 	if (Array.isArray(status) && (status.length === 0 || status.includes('available') || status.includes('free'))) {
 		return true;
 	}

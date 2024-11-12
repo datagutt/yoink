@@ -100,7 +100,7 @@ export class Whois {
 		this.whoiser = whoiser;
 	}
 	async whois(domain: string, options: any = {}): Promise<IMappedWhoisData | null> {
-		const defaultOptions = {};
+		const defaultOptions = {follow: 1};
 		const opts = {...defaultOptions, ...options};
 		const whoisResult: IWhoisData[] = await this.whoiser.domain(domain, opts);
 

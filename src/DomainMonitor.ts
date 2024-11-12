@@ -9,7 +9,7 @@ export default class DomainMonitor {
 	private whois = new Whois();
 	private emitter: EventEmitter;
 	private logger: Logger;
-	private timer: NodeJS.Timer | null = null;
+	private timer: ReturnType<typeof setInterval> | null = null;
 
 	constructor(emitter: EventEmitter, logger: Logger) {
 		this.emitter = emitter;
@@ -69,7 +69,7 @@ export default class DomainMonitor {
 	public close() {
 		this.logger.info('closing domain monitor');
 		if (this.timer) {
-			clearInterval(this.timer);
+		//	clearInterval(this.timer);
 		}
 	}
 }
