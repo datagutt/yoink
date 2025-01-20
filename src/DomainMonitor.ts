@@ -3,7 +3,7 @@ import {Logger} from 'tslog';
 import {Domain} from './services/domain';
 import {Whois} from './services/whois';
 
-const CHECK_INTERVAL = 1000 * 60 * 10; // 10 minutes
+const CHECK_INTERVAL = 1000 * 60 * 0.5; // 0.5 minute
 export default class DomainMonitor {
 	private domains = new Map<string, Domain>();
 	private whois = new Whois();
@@ -21,10 +21,12 @@ export default class DomainMonitor {
 	protected async check() {
 		this.logger.info('checking domains');
 		for (const domain of this.domains.values()) {
+			let data;
 			if (domain.expiringSoon) {
-				await domain.getDomain();
+				data = await domain.getDomain();
 			}
 			console.log(`${domain.domainName}: ${domain.expired ? 'expired' : 'not expired'}`);
+			if (data) console.log(`${domain.domainName}:`, data);
 			if (domain.expired) {
 				this.emitter.emit('domainExpired', domain);
 			}
