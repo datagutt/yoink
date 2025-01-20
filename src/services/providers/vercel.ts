@@ -23,6 +23,29 @@ export class Vercel {
 		this.logger = logger;
 	}
 
+	async checkPrice(name: string): Promise<number> {
+		const url = `https://api.vercel.com/v4/domains/price?name=${name}&teamId=${this.teamId}`;
+
+		try {
+			const res = await fetch(url, {
+				method: 'GET',
+				headers: this.headers,
+			});
+
+			if (res.status === 200) {
+				const data: any = await res.json();
+				return data.price as number;
+			} else {
+				const data: any = await res.json();
+				this.logger.error(`Failed to check price for domain ${name}: ${JSON.stringify(data)}`);
+				return 0;
+			}
+		} catch (error) {
+			this.logger.error(error);
+			return 0;
+		}
+	}
+
 	async buyDomain(name: string, expectedPrice?: number): Promise<boolean> {
 		const url = `https://api.vercel.com/v4/domains/buy?teamId=${this.teamId}`;
 		const body: DomainBody = {
@@ -43,7 +66,7 @@ export class Vercel {
 				return true;
 			} else {
 				const data: any = await res.json();
-				this.logger.error(`Failed to buy domain ${name}: ${data?.error?.message}`);
+				this.logger.error(`Failed to buy domain ${name}: ${JSON.stringify(data)}`);
 				return false;
 			}
 		} catch (error) {
